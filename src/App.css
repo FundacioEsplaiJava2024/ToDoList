@@ -1,8 +1,14 @@
-.to-do-wrapper {
+.body-wrapper {
+  width: auto;
+  height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  padding: 2rem;
-}/*# sourceMappingURL=App.css.map */
+}
+
+.to-do-wrapper {
+  width: 100%;
+  max-width: 1150px;
+  padding: 3rem;
+  background: blue;
+}

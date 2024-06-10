@@ -9,3 +9,24 @@
   --margin-large: 3rem;
   --margin-low: 1.5rem;
 }
+
+*{
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  font-family: var(--font-family);
+  font-size: var(--secondary-font-size);
+}
+
+h1{
+  font-size: var(--primary-font-size);
+}
+
+h2,
+h3,
+h4,
+h5{
+  font-size: var(--secondary-font-size);
+}
