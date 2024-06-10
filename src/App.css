@@ -12,3 +12,31 @@
   padding: 3rem;
   background: blue;
 }
+.to-do-wrapper .hero-title {
+  padding: 1.5rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.to-do-wrapper .task-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.to-do-wrapper .task-wrapper .buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.to-do-wrapper .task-wrapper .list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.to-do-wrapper .task-wrapper .list-wrapper .list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+}/*# sourceMappingURL=App.css.map */
