@@ -1,4 +1,34 @@
+import React, { useState, useEffect } from "react"
+
+interface preventClose {
+    e : string;
+}
+
 export function PopUp(){
+    const [isOpen, setIsOpen] = useState(true);
+    const [isClosing, setIsClosing] = useState(false);
+
+    useEffect(()=>{
+        const preventClose = ({e}: preventClose) => {
+            e.preventDefault();
+            e.returnValue = "";
+        }
+        if(isOpen){
+            window.addEventListener("beforeUnload", preventClose);
+        }else{
+            window.removeEventListener("beforeUnload", preventClose );
+        }
+        return ()=> window.removeEventListener("beforeUnload", preventClose );
+    }, [isOpen]);
+
+   const handleClose = ()=> {
+    setIsOpen(false);
+    setIsClosing(true);
+
+   }
+
+
+
     return (
         <div className="pop-up-wrapper"></div>
     )
