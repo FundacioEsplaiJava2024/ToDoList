@@ -1,42 +1,42 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.body-wrapper {
+  width: auto;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.to-do-wrapper {
+  width: 100%;
+  max-width: 1150px;
+  padding: 3rem;
+  background: #dee2e6;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.to-do-wrapper .hero-title {
+  padding: 1.5rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.to-do-wrapper .task-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.to-do-wrapper .task-wrapper .buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.to-do-wrapper .task-wrapper .list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
+.to-do-wrapper .task-wrapper .list-wrapper .list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+}/*# sourceMappingURL=App.css.map */

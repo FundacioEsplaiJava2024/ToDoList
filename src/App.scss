@@ -1,0 +1,45 @@
+.body-wrapper {
+  width: auto;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.to-do-wrapper {
+  width: 100%;
+  max-width: 1150px;
+  padding: 3rem;
+  background: #dee2e6;
+
+  .hero-title {
+    padding: 1.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .task-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .buttons-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .list-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: white;
+      }
+    }
+  }
+}
