@@ -1,3 +1,20 @@
+import { useState } from "react";
+
 export function AddButton() {
-    return <button>Add +</button>;
+    const [showPopup, setShowPopup] = useState(false);
+
+    const handleButtonClick = () => {
+        setShowPopup(true);
+    };
+
+    const handleClosePopup = () => {
+        setShowPopup(false);
+    };
+
+    return (
+        <div>
+            <button onClick={handleButtonClick}>Add +</button>
+            {showPopup && <PopUp onClose={handleClosePopup} />}
+        </div>
+    );
 }
