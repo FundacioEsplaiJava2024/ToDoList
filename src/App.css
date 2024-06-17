@@ -40,6 +40,7 @@
   padding: 1rem 2rem;
   background: white;
 }
+
 .to-do-wrapper .task-wrapper .list-wrapper .list-item div > button > svg {
   padding: 8px;
   border-radius: 20px;
