@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { parse, isValid } from 'date-fns';
 
 interface Task {
     id: string;
@@ -21,12 +20,12 @@ const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
     const [taskName, setTaskName] = useState('');
     const [taskDescription, setTaskDescription] = useState('');
     const [taskDeadline, setTaskDeadline] = useState('');
-    const [taskPriority, setTaskPriority] = useState('🔴');
+    const [taskPriority, setTaskPriority] = useState('');
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (taskName.trim() === '' || taskDescription.trim() === '') {
-            alert('Please enter a task name and description.');
+        if (taskName.trim() === '') {
+            alert('Please enter a task name');
             return;
         }
   
@@ -44,7 +43,7 @@ const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
         setTaskName('');
         setTaskDescription('');
         setTaskDeadline('');
-        setTaskPriority('🔴');
+        setTaskPriority('');
         hideModal();
     };
 

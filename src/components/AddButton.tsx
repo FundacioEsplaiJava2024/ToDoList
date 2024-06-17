@@ -1,10 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Modal from './Modal';
-
-
-interface AddButtonProps {
-    addTask: (task: Task) => void;
-}
 
 interface Task {
     id: string;
@@ -16,7 +11,7 @@ interface Task {
     doing: boolean;
 }
 
-const AddButton: React.FC<AddButtonProps> = ({ addTask }) => {
+const AddButton= () => {
     const [show, setShow] = useState(false);
 
     const showModal = () => setShow(true);
@@ -28,8 +23,8 @@ const AddButton: React.FC<AddButtonProps> = ({ addTask }) => {
         const updatedTasks = [...tasks, data];
         localStorage.setItem('tasks', JSON.stringify(updatedTasks));
 
-        setShow(false);
-        //addTask(data);
+        hideModal();
+        window.location.reload();
     };
 
     return (
