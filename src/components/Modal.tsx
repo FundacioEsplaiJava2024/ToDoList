@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { nanoid } from 'nanoid';
 
 interface Task {
     id: string;
@@ -30,7 +31,7 @@ const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
         }
   
         const newTask: Task = {
-            id: String(Date.now()),
+            id: nanoid(),
             title: taskName,
             description: taskDescription,
             dateCreated: new Date().toLocaleDateString(),
