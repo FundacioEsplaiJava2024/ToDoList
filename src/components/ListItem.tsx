@@ -20,13 +20,16 @@ export function ListItem({ title, description, doing, onToggleDoing, onDelete }:
 
   return (
     <div className="list-item">
-      <input
-        type="checkbox"
-        checked={doing}
-        onChange={onToggleDoing}
-      />
-      <h1>{title}</h1>
-      {description && <p>{description}</p>}
+      <div className="check-estruct">
+        <input
+          className="check"
+          type="checkbox"
+          checked={doing}
+          onChange={onToggleDoing}
+        />
+        <h1>{title}</h1>
+      </div>
+        {description && <p className="text">{description}</p>}
       <div>
         <button style={styles.editButton}>
           <Pencil />

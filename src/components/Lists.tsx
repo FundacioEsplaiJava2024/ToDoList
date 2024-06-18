@@ -43,7 +43,7 @@ const List: React.FC<ListProps> = ({ filter }) => {
   };
 
   return (
-    <div className="list-wrapper">
+    <div className="list-wrapper" className="scrollable-container">
       {data
         .filter((item) => {
           if (filter === "all") {
