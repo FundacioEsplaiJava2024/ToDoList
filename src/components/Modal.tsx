@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { nanoid } from "nanoid";
 
-interface Task {
-  id: string;
-  title: string;
-  description: string;
-  dateCreated: string;
-  deadLine: string;
-  priority: string;
-  doing: boolean;
-}
-
+/** 
+    interface Task {
+    id: string;
+    title: string;
+    description: string;
+    dateCreated: string;
+    deadLine: string;
+    priority: string;
+    doing: boolean;
+}*/
+    
 interface AddTaskModalProps {
   show: boolean;
   hideModal: () => void;
@@ -38,7 +39,7 @@ const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
       dateCreated: new Date().toLocaleDateString(),
       deadLine: taskDeadline || "",
       priority: taskPriority,
-      doing: true,
+      doing: false,
     };
 
     onSubmit(newTask);

@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from "react";
 import { ListItem } from "./ListItem";
-import { useEffect, useState } from "react";
 
 interface Data {
   id: string;
@@ -8,16 +8,20 @@ interface Data {
   dateCreated: string;
   deadLine: string;
   priority: string;
-  doing: string;
+  doing: boolean;
 }
 
-export function List() {
+interface ListProps {
+  filter: string; // Recibe el filtro como prop
+}
+
+const List: React.FC<ListProps> = ({ filter }) => {
   const [data, setData] = useState<Data[]>([]);
 
   useEffect(() => {
-    const datoGuardado = JSON.parse(localStorage.getItem("tasks") || "[]");
-    if (datoGuardado.length > 0) {
-      setData(datoGuardado);
+    const savedData = JSON.parse(localStorage.getItem("tasks") || "[]");
+    if (savedData.length > 0) {
+      setData(savedData);
     }
   }, []);
 
@@ -25,17 +29,44 @@ export function List() {
     const updatedData = data.filter((item) => item.id !== id);
     setData(updatedData);
     localStorage.setItem("tasks", JSON.stringify(updatedData));
-  }
+  };
+
+  const handleToggleDoing = (id: string): void => {
+    const updatedData = data.map((item) => {
+      if (item.id === id) {
+        return { ...item, doing: !item.doing };
+      }
+      return item;
+    });
+    setData(updatedData);
+    localStorage.setItem("tasks", JSON.stringify(updatedData));
+  };
+
   return (
     <div className="list-wrapper">
-      {data.map((item) => (
-        <ListItem
-          key={item.id}
-          title={item.title}
-          description={item.description}
-          onDelete={() => handleDelete(item.id)}
-        />
-      ))}
+      {data
+        .filter((item) => {
+          if (filter === "all") {
+            return true;
+          } else if (filter === "doing") {
+            return item.doing === false;
+          } else if (filter === "done") {
+            return item.doing === true;
+          }
+          return true;
+        })
+        .map((item) => (
+          <ListItem
+            key={item.id}
+            title={item.title}
+            description={item.description}
+            doing={item.doing}
+            onToggleDoing={() => handleToggleDoing(item.id)}
+            onDelete={() => handleDelete(item.id)}
+          />
+        ))}
     </div>
   );
-}
+};
+
+export default List;
