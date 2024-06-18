@@ -3,9 +3,12 @@ import { Pencil, Trash } from "./Icons";
 interface ItemProps {
   title: string;
   description?: string;
+  onDelete: () => void;
 }
 
-export function ListItem({ title, description }: ItemProps) {
+
+
+export function ListItem({ title, description, onDelete}: ItemProps) {
   const styles = {
     deleteButton: {
       color: "#9d0208",
@@ -22,7 +25,7 @@ export function ListItem({ title, description }: ItemProps) {
         <button style={styles.editButton}>
           <Pencil />
         </button>
-        <button style={styles.deleteButton}>
+        <button style={styles.deleteButton} onClick={onDelete}>
           <Trash />
         </button>
       </div>
