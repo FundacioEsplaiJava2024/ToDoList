@@ -21,7 +21,7 @@ export function List() {
     }
   }, []);
 
-  function handleDelete(id: string): void {
+  const handleDelete = (id: string): void => {
     const updatedData = data.filter((item) => item.id !== id);
     setData(updatedData);
     localStorage.setItem("tasks", JSON.stringify(updatedData));
