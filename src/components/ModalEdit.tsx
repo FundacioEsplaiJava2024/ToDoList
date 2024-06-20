@@ -1,38 +1,41 @@
-import React, { useState } from "react";
-import { nanoid } from "nanoid";
-import { Task } from '../Task'
+import { useState } from "react";
 
-interface AddTaskModalProps {
+interface Task {
+    title: string;
+    description: string;
+    deadLine: string;
+    priority: string;
+}
+
+interface EditTaskModalProps {
     show: boolean;
     hideModal: () => void;
     onSubmit: (data: Task) => void;
+    data?: (data: Task) => void;
 }
 
-const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
+const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, data }) => {
+
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [taskDeadline, setTaskDeadline] = useState("");
     const [taskPriority, setTaskPriority] = useState("");
 
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleEdit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (taskName.trim() === "") {
             alert("Please enter a task name");
             return;
         }
 
-        const newTask: Task = {
-            id: nanoid(),
+        const editTask: Task = {
             title: taskName,
             description: taskDescription,
-            dateCreated: new Date().toLocaleDateString(),
-            deadLine: taskDeadline || "",
+            deadLine: taskDeadline,
             priority: taskPriority,
-            doing: false,
         };
 
-        onSubmit(newTask);
+        onSubmit(editTask);
         setTaskName("");
         setTaskDescription("");
         setTaskDeadline("");
@@ -44,11 +47,13 @@ const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
         return null;
     }
 
+    console.log(data)
+
     return (
         <div className="modal display-block">
             <section className="modal-main">
                 <h2>Add a new task</h2>
-                <form onSubmit={handleSubmit}>
+                <form>
                     <label>
                         Task Name:
                         <input
@@ -98,4 +103,5 @@ const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
         </div>
     );
 };
-export default Modal;
+export default ModalEdit;
+
