@@ -1,18 +1,9 @@
 import { ListItem } from "./ListItem";
 import { useEffect, useState } from "react";
-
-interface Data {
-  id: string;
-  title: string;
-  description: string;
-  dateCreated: string;
-  deadLine: string;
-  priority: string;
-  doing: string;
-}
+import { Task } from '../Task'
 
 export function List() {
-  const [data, setData] = useState<Data[]>([]);
+  const [data, setData] = useState<Task[]>([]);
 
   useEffect(() => {
     const datoGuardado = JSON.parse(localStorage.getItem("tasks") || "[]");
@@ -26,6 +17,7 @@ export function List() {
     setData(updatedData);
     localStorage.setItem("tasks", JSON.stringify(updatedData));
   }
+
   return (
     <div className="list-wrapper">
       {data.map((item) => (
