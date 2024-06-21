@@ -26,7 +26,7 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
             setTaskName(data.title);
             setTaskDescription(data.description);
             setTaskDeadline(data.deadLine);
-            setTaskPriority(data.priority);
+            setTaskPriority(data.priority || "🔴");
         }
     }, [data]);
 
@@ -72,7 +72,7 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
     return (
         <div className="modal display-block">
             <section className="modal-main">
-                <h2>Add a new task</h2>
+                <h2>Edit Task</h2>
                 <form onSubmit={handleEdit}>
                     <label>
                         Task Name:
@@ -116,7 +116,7 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
                             <option value="🔵">🔵 High</option>
                         </select>
                     </label>
-                    <button type="submit">Add Task</button>
+                    <button type="submit">Edit Task</button>
                 </form>
                 <button onClick={hideModal}>Close</button>
             </section>

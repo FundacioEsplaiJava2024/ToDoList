@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ListItem } from "./ListItem";
 import { Task } from '../Task'
 
 interface ListProps {
-  filter: string; // Recibe el filtro como prop
+  filter: string; 
+  data: Task[];
+  updateList: (newData: Task[])=> void;
 }
 
-const List: React.FC<ListProps> = ({ filter }) => {
-  const [data, setData] = useState<Task[]>([]);
+const List = ({ filter, data, updateList }: ListProps) => {
 
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("tasks") || "[]");
     if (savedData.length > 0) {
-      setData(savedData);
+      updateList(savedData);
     }
   }, []);
 
   const handleDelete = (id?: string): void => {
     const updatedData = data.filter((item) => item.id !== id);
     localStorage.setItem("tasks", JSON.stringify(updatedData));
-    setData(updatedData);
+    updateList(updatedData);
   };
 
   const handleToggleDoing = (id?: string): void => {
@@ -29,13 +30,13 @@ const List: React.FC<ListProps> = ({ filter }) => {
       }
       return item;
     });
-    setData(updatedData);
+    updateList(updatedData);
     localStorage.setItem("tasks", JSON.stringify(updatedData));
   };
 
   const handleEdit = (updatedTask: Task): void => {
     const updatedData = data.map((item) => (item.id === updatedTask.id ? updatedTask : item));
-    setData(updatedData);
+    updateList(updatedData);
     localStorage.setItem("tasks", JSON.stringify(updatedData));
   };
 

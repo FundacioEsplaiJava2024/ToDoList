@@ -11,7 +11,7 @@ export function FilterButton({ onFilterChange }: FilterButtonProps) {
   };
 
   return (
-    <select name="options" id="options" onChange={handleFilterChange} defaultValue="all" className="filter">
+    <select name="options" id="options" onChange={handleFilterChange} defaultValue="doing" className="filter">
       <option value="all">All</option>
       <option value="doing">Doing</option>
       <option value="done">Done</option>

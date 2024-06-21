@@ -12,7 +12,7 @@ const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [taskDeadline, setTaskDeadline] = useState("");
-    const [taskPriority, setTaskPriority] = useState("");
+    const [taskPriority, setTaskPriority] = useState("🔴");
   
     useEffect(() => {
       const handleEscape = (e: KeyboardEvent) => {
@@ -51,7 +51,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setTaskName("");
     setTaskDescription("");
     setTaskDeadline("");
-    setTaskPriority("");
+    setTaskPriority("🔴");
     hideModal();
   };
 
@@ -102,7 +102,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
               onChange={(e) => setTaskPriority(e.target.value)}
               required
             >
-              <option value="🔴" selected>🔴 Low</option>
+              <option value="🔴">🔴 Low</option>
               <option value="🟡">🟡 Medium</option>
               <option value="🔵">🔵 High</option>
             </select>

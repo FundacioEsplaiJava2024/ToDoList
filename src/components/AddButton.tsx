@@ -2,30 +2,26 @@ import { useState, useEffect } from 'react';
 import Modal from './Modal';
 import { Task } from '../Task';
 
+interface AddButtonProps {
+  handleAdd: (newTask: Task) => void;
+}
 
-const AddButton: React.FC = () => {
+const AddButton = ({handleAdd} : AddButtonProps) => {
   const [show, setShow] = useState(false);
-  const [tasks, setTasks] = useState<Task[]>([]);
 
-  useEffect(() => {
-    const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]') as Task[];
-    setTasks(storedTasks);
-  }, []);
-
+  const submit = (task: Task) => {
+    handleAdd(task);
+    hideModal();
+  
+  }
+  
   const showModal = () => setShow(true);
   const hideModal = () => setShow(false);
 
-  const handleAddTask = (newTask: Task) => {
-    const updatedTasks = [...tasks, newTask];
-    setTasks(updatedTasks);
-    localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-    hideModal(); 
-  };
-
   return (
     <div>
-      <button onClick={showModal} className='addbutton'>Add +</button>
-      <Modal show={show} hideModal={hideModal} onSubmit={handleAddTask} />
+      <button onClick={showModal} className='addbutton'>New</button>
+      <Modal show={show} hideModal={hideModal} onSubmit={submit} />
     </div>
   );
 };
