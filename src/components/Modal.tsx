@@ -1,31 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { nanoid } from "nanoid";
-
-/** 
-    interface Task {
-    id: string;
-    title: string;
-    description: string;
-    dateCreated: string;
-    deadLine: string;
-    priority: string;
-    doing: boolean;
-}*/
+import { Task } from '../Task'
     
 interface AddTaskModalProps {
-  show: boolean;
-  hideModal: () => void;
-  onSubmit: (data: Task) => void;
+    show: boolean;
+    hideModal: () => void;
+    onSubmit: (data: Task) => void;
 }
 
 const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
-  const [taskName, setTaskName] = useState("");
-  const [taskDescription, setTaskDescription] = useState("");
-  const [taskDeadline, setTaskDeadline] = useState("");
-  const [taskPriority, setTaskPriority] = useState("");
+    const [taskName, setTaskName] = useState("");
+    const [taskDescription, setTaskDescription] = useState("");
+    const [taskDeadline, setTaskDeadline] = useState("");
+    const [taskPriority, setTaskPriority] = useState("");
   
+    useEffect(() => {
+      const handleEscape = (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
+              hideModal();
+          }
+      };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      if (show) {
+          document.addEventListener('keydown', handleEscape);
+      }
+
+      return () => {
+          document.removeEventListener('keydown', handleEscape);
+      };
+  }, [show, hideModal]);
+
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (taskName.trim() === "") {
       alert("Please enter a task name");
@@ -77,6 +82,7 @@ const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
               placeholder="Description"
               value={taskDescription}
               onChange={(e) => setTaskDescription(e.target.value)}
+              required
             />
           </label>
           <label>

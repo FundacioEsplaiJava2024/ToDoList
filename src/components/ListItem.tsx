@@ -1,14 +1,16 @@
+import { useState } from "react";
 import { Pencil, Trash } from "./Icons";
+import ModalEdit from './ModalEdit';
+import { Task } from "../Task";
 
 interface ItemProps {
-  title: string;
-  description?: string;
-  doing: boolean;
+  task: Task;
   onToggleDoing: () => void;
   onDelete: () => void;
+  onEdit: (updatedTask: Task) => void;
 }
 
-export function ListItem({ title, description, doing, onToggleDoing, onDelete }: ItemProps) {
+export function ListItem({ task, onToggleDoing, onDelete, onEdit }: ItemProps) {
   const styles = {
     deleteButton: {
       color: "#9d0208",
@@ -18,26 +20,39 @@ export function ListItem({ title, description, doing, onToggleDoing, onDelete }:
     },
   };
 
+  const [show, setShow] = useState(false);
+
+  const showModal = () => setShow(true);
+  const hideModal = () => setShow(false);
+
+  const handleEditTask = (updatedTask: Task) => {
+    onEdit({ ...updatedTask, id: task.id, doing: task.doing });
+    hideModal();
+  };
+
   return (
-    <div className="list-item">
-      <div className="check-estruct">
-        <input
-          className="check"
-          type="checkbox"
-          checked={doing}
-          onChange={onToggleDoing}
-        />
-        <h1>{title}</h1>
+    <>
+      <ModalEdit show={show} hideModal={hideModal} onSubmit={handleEditTask} data={task} />
+      <div className="list-item" onClick={showModal}>
+        <div className="check-estruct">
+          <input
+            className="check"
+            type="checkbox"
+            checked={task.doing}
+            onChange={onToggleDoing}
+          />
+          <h1>{task.title}</h1>
+        </div>
+        {task.description && <p className="text">{task.description}</p>}
+        <div>
+          <button style={styles.editButton} onClick={showModal}>
+            <Pencil />
+          </button>
+          <button style={styles.deleteButton} onClick={onDelete}>
+            <Trash />
+          </button>
+        </div>
       </div>
-        {description && <p className="text">{description}</p>}
-      <div>
-        <button style={styles.editButton}>
-          <Pencil />
-        </button>
-        <button style={styles.deleteButton} onClick={onDelete}>
-          <Trash />
-        </button>
-      </div>
-    </div>
+    </>
   );
 }
