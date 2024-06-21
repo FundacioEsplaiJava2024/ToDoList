@@ -37,16 +37,17 @@ export function ListItem({ task, onToggleDoing, onDelete, onEdit }: ItemProps) {
   return (
     <>
       <ModalEdit show={show} hideModal={hideModal} onSubmit={handleEditTask} data={task} />
-      <div className="list-item">
+      <div className="list-item" onClick={showModal}>
         <div className="check-estruct">
           <input
             className="check"
             type="checkbox"
             checked={task.doing}
             onChange={handleCheckboxClick}
+            onClick={(e) => e.stopPropagation()}
           />
           <h1 onClick={showModal}>{task.title}</h1>
-        </div>
+        </div >
         {task.description && <p onClick={showModal} className="text">{task.description}</p>}
         <div>
           <button style={styles.editButton} onClick={showModal}>
