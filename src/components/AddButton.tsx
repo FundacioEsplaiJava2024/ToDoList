@@ -1,29 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from './Modal';
-import { Task } from '../Task'
+import { Task } from '../Task';
 
-const AddButton= () => {
-    const [show, setShow] = useState(false);
+interface AddButtonProps {
+  handleAdd: (newTask: Task) => void;
+}
+const AddButton = ({handleAdd} : AddButtonProps) => {
+  const [show, setShow] = useState(false);
 
-    const showModal = () => setShow(true);
-    const hideModal = () => setShow(false);
+  const submit = (task: Task) => {
+    handleAdd(task);
+    hideModal();
+  
+  }
+  
+  const showModal = () => setShow(true);
+  const hideModal = () => setShow(false);
 
-    const handleAddTask = (data: Task) => {
-        
-        const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-        const updatedTasks = [...tasks, data];
-        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-
-        hideModal();
-        window.location.reload();
-    };
-
-    return (
-        <div>
-            <button onClick={showModal}>Add +</button>
-            <Modal show={show} hideModal={hideModal} onSubmit={handleAddTask} />
-        </div>
-    );
+  return (
+    <div>
+      <button onClick={showModal} className='addbutton'>New</button>
+      <Modal show={show} hideModal={hideModal} onSubmit={submit} />
+    </div>
+  );
 };
 
 export default AddButton;

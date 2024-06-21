@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Task {
     title: string;
@@ -11,7 +11,7 @@ interface EditTaskModalProps {
     show: boolean;
     hideModal: () => void;
     onSubmit: (data: Task) => void;
-    data?: (data: Task) => void;
+    data?: Task;
 }
 
 const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, data }) => {
@@ -19,7 +19,16 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [taskDeadline, setTaskDeadline] = useState("");
-    const [taskPriority, setTaskPriority] = useState("");
+    const [taskPriority, setTaskPriority] = useState("🔴");
+
+    useEffect(() => {
+        if (data) {
+            setTaskName(data.title);
+            setTaskDescription(data.description);
+            setTaskDeadline(data.deadLine);
+            setTaskPriority(data.priority || "🔴");
+        }
+    }, [data]);
 
     const handleEdit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -36,30 +45,41 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
         };
 
         onSubmit(editTask);
-        setTaskName("");
-        setTaskDescription("");
-        setTaskDeadline("");
-        setTaskPriority("");
         hideModal();
     };
+
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                hideModal();
+            }
+        };
+  
+        if (show) {
+            document.addEventListener('keydown', handleEscape);
+        }
+  
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [show, hideModal]);
+
 
     if (!show) {
         return null;
     }
 
-    console.log(data)
-
     return (
         <div className="modal display-block">
             <section className="modal-main">
-                <h2>Add a new task</h2>
-                <form>
+                <h2>Edit Task</h2>
+                <form onSubmit={handleEdit}>
                     <label>
                         Task Name:
                         <input
                             type="text"
                             name="taskName"
-                            placeholder="Tittle"
+                            placeholder="Title"
                             value={taskName}
                             onChange={(e) => setTaskName(e.target.value)}
                             required
@@ -72,6 +92,7 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
                             placeholder="Description"
                             value={taskDescription}
                             onChange={(e) => setTaskDescription(e.target.value)}
+                            required
                         />
                     </label>
                     <label>
@@ -81,7 +102,6 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
                             name="taskDeadline"
                             value={taskDeadline}
                             onChange={(e) => setTaskDeadline(e.target.value)}
-                            pattern="\d{2}/\d{2}/\d{4}"
                         />
                     </label>
                     <label>
@@ -91,12 +111,12 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
                             onChange={(e) => setTaskPriority(e.target.value)}
                             required
                         >
-                            <option value="🔴">🔴 Low</option>
+                            <option value="🔴" selected>🔴 Low</option>
                             <option value="🟡">🟡 Medium</option>
                             <option value="🔵">🔵 High</option>
                         </select>
                     </label>
-                    <button type="submit">Add Task</button>
+                    <button type="submit">Edit Task</button>
                 </form>
                 <button onClick={hideModal}>Close</button>
             </section>
@@ -104,4 +124,3 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
     );
 };
 export default ModalEdit;
-

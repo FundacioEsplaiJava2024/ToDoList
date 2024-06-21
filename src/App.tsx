@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <section className='body-wrapper'>
-        <ToDoWrapper title="to Do" />
+        <ToDoWrapper title="Task List" />
       </section>
     </>
   )
