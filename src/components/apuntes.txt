@@ -1,0 +1,770 @@
+--------------Parte del main.tsx-----------------
+import React from 'react';biblioteca de react
+import ReactDOM from 'react-dom/client'; // Importa solo el cliente de ReactDOM
+import App from './App.tsx'; // Importa el componente principal de la aplicación desde App.tsx
+import './index.css'; // Importa los estilos globales de index.css
+import { Theme, ThemePanel } from '@radix-ui/themes'; // Importa Theme y ThemePanel desde la biblioteca @radix-ui/themes
+import '@radix-ui/themes/styles.css'; // Importa los estilos CSS predefinidos de @radix-ui/themes
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <Theme>
+      <App />
+      {/*<ThemePanel />*/}
+    </Theme>
+  </React.StrictMode>,
+)
+
+--------------Parte del app.tsx-----------------
+
+import './App.css'; // Importa los estilos específicos de la aplicación desde App.css
+import { ToDoWrapper } from './components/ToDoWrapper'; // Importa el componente ToDoWrapper desde './components/ToDoWrapper'
+
+function App() {
+  return (
+    <> {/* React fragment, usado para envolver múltiples elementos sin introducir un nodo adicional en el DOM */}
+      <section className='body-wrapper'> {/* Sección con clase 'body-wrapper' */}
+        <ToDoWrapper title="To Do" /> {/* Renderiza el componente ToDoWrapper con un prop 'title' */}
+      </section>
+    </>
+  );
+}
+
+export default App; // Exporta el componente App como el componente principal de la aplicación
+
+
+
+--------------Parte del ToDoWrapper.tsx-----------------
+import React, { useState } from "react"; // Importa React y useState desde la biblioteca 'react'
+import List from "./Lists"; // Importa el componente List desde './Lists'
+import { FilterButton } from "./FilterButtons"; // Importa el componente FilterButton desde './FilterButtons'
+import AddButton from './AddButton'; // Importa el componente AddButton desde './AddButton'
+
+interface ToDoProps {
+  title: string; // Define una interfaz para las propiedades recibidas por ToDoWrapper, que incluye una propiedad title de tipo string
+}
+
+export function ToDoWrapper({ title }: ToDoProps) { // Define el componente funcional ToDoWrapper que recibe props de tipo ToDoProps
+  const [filter, setFilter] = useState<string>("all"); // Estado local para el filtro de tareas, inicializado con "all"
+
+  const handleFilterChange = (selectedFilter: string) => {
+    setFilter(selectedFilter); // Función para manejar el cambio de filtro, actualizando el estado filter
+  };
+
+  return (
+    <main className="to-do-wrapper"> {/* Contenedor principal de la aplicación */}
+      <div className="hero-title">
+        <h1>{title}</h1> {/* Título principal de la lista de tareas, mostrando el prop 'title' */}
+      </div>
+      <div className="task-wrapper">
+        <div className="buttons-wrapper">
+            <AddButton /> {/* Renderiza el componente AddButton para añadir nuevas tareas */}
+            <FilterButton onFilterChange={handleFilterChange} /> {/* Renderiza el componente FilterButton para filtrar tareas */}
+        </div>
+        <List filter={filter} /> {/* Renderiza el componente List pasando el estado 'filter' como prop */}
+      </div>
+    </main>
+  );
+}
+
+
+--------------Parte del AddButton.tsx-----------------
+import { useState, useEffect } from 'react'; // Importa useState y useEffect desde React
+import Modal from './Modal'; // Importa el componente Modal desde './Modal'
+import { Task } from '../Task'; // Importa la interfaz Task desde '../Task'
+
+const AddButton: React.FC = () => { // Define el componente funcional AddButton como un componente de tipo React.FC
+  const [show, setShow] = useState(false); // Estado para controlar la visibilidad del modal
+  const [tasks, setTasks] = useState<Task[]>([]); // Estado para almacenar las tareas, inicialmente vacío
+
+  useEffect(() => {
+    // useEffect se utiliza para cargar las tareas desde el almacenamiento local al cargar el componente
+    const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]') as Task[]; // Parsea las tareas almacenadas en localStorage
+    setTasks(storedTasks); // Actualiza el estado de las tareas con las tareas cargadas
+  }, []);
+
+  const showModal = () => setShow(true); // Función para mostrar el modal
+  const hideModal = () => setShow(false); // Función para ocultar el modal
+
+  const handleAddTask = (newTask: Task) => {
+    // Función para manejar la adición de una nueva tarea
+    const updatedTasks = [...tasks, newTask]; // Crea una nueva lista de tareas que incluye la nueva tarea
+    setTasks(updatedTasks); // Actualiza el estado de las tareas con la lista actualizada
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Guarda las tareas actualizadas en localStorage como JSON
+    hideModal(); // Oculta el modal después de añadir la tarea
+  };
+
+  return (
+    <div>
+      {/* Botón para mostrar el modal */}
+      <button onClick={showModal} className='addbutton'>Add +</button>
+      {/* Modal para agregar una nueva tarea */}
+      <Modal show={show} hideModal={hideModal} onSubmit={handleAddTask} />
+    </div>
+  );
+};
+
+export default AddButton; // Exporta el componente AddButton como componente por defecto
+
+
+--------------Parte del Modal.tsx-----------------
+import React, { useState, useEffect} from "react";
+import { nanoid } from "nanoid";
+import { Task } from '../Task'
+    
+interface AddTaskModalProps {
+    show: boolean;
+    hideModal: () => void;
+    onSubmit: (data: Task) => void;
+}
+
+const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
+    const [taskName, setTaskName] = useState("");
+    const [taskDescription, setTaskDescription] = useState("");
+    const [taskDeadline, setTaskDeadline] = useState("");
+    const [taskPriority, setTaskPriority] = useState("");
+  
+    useEffect(() => {
+      const handleEscape = (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
+              hideModal();
+          }
+      };
+
+      if (show) {
+          document.addEventListener('keydown', handleEscape);
+      }
+
+      return () => {
+          document.removeEventListener('keydown', handleEscape);
+      };
+  }, [show, hideModal]);
+
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (taskName.trim() === "") {
+      alert("Please enter a task name");
+      return;
+    }
+
+    const newTask: Task = {
+      id: nanoid(),
+      title: taskName,
+      description: taskDescription,
+      dateCreated: new Date().toLocaleDateString(),
+      deadLine: taskDeadline || "",
+      priority: taskPriority,
+      doing: false,
+    };
+
+    onSubmit(newTask);
+    setTaskName("");
+    setTaskDescription("");
+    setTaskDeadline("");
+    setTaskPriority("");
+    hideModal();
+  };
+
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <div className="modal display-block">
+      <section className="modal-main">
+        <h2>Add a new task</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Task Name:
+            <input
+              type="text"
+              name="taskName"
+              placeholder="Tittle"
+              value={taskName}
+              onChange={(e) => setTaskName(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Description:
+            <textarea
+              name="taskDescription"
+              placeholder="Description"
+              value={taskDescription}
+              onChange={(e) => setTaskDescription(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Deadline:
+            <input
+              type="date"
+              name="taskDeadline"
+              value={taskDeadline}
+              onChange={(e) => setTaskDeadline(e.target.value)}
+              pattern="\d{2}/\d{2}/\d{4}"
+            />
+          </label>
+          <label>
+            Priority:
+            <select
+              value={taskPriority}
+              onChange={(e) => setTaskPriority(e.target.value)}
+              required
+            >
+              <option value="🔴">🔴 Low</option>
+              <option value="🟡">🟡 Medium</option>
+              <option value="🔵">🔵 High</option>
+            </select>
+          </label>
+          <button type="submit">Add Task</button>
+        </form>
+        <button onClick={hideModal}>Close</button>
+      </section>
+    </div>
+  );
+};
+
+export default Modal;
+
+
+--------------------------------------Parte del ModalEdit.tsx-----------------
+import { useState, useEffect } from "react";
+
+interface Task {
+    title: string;
+    description: string;
+    deadLine: string;
+    priority: string;
+}
+
+interface EditTaskModalProps {
+    show: boolean;
+    hideModal: () => void;
+    onSubmit: (data: Task) => void;
+    data?: Task;
+}
+
+const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, data }) => {
+
+    const [taskName, setTaskName] = useState("");
+    const [taskDescription, setTaskDescription] = useState("");
+    const [taskDeadline, setTaskDeadline] = useState("");
+    const [taskPriority, setTaskPriority] = useState("");
+
+    useEffect(() => {
+        if (data) {
+            setTaskName(data.title);
+            setTaskDescription(data.description);
+            setTaskDeadline(data.deadLine);
+            setTaskPriority(data.priority);
+        }
+    }, [data]);
+
+    const handleEdit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (taskName.trim() === "") {
+            alert("Please enter a task name");
+            return;
+        }
+
+        const editTask: Task = {
+            title: taskName,
+            description: taskDescription,
+            deadLine: taskDeadline,
+            priority: taskPriority,
+        };
+
+        onSubmit(editTask);
+        hideModal();
+    };
+
+    useEffect(() => {
+        const handleEscape = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                hideModal();
+            }
+        };
+  
+        if (show) {
+            document.addEventListener('keydown', handleEscape);
+        }
+  
+        return () => {
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, [show, hideModal]);
+
+    
+    if (!show) {
+        return null;
+    }
+
+    return (
+        <div className="modal display-block">
+            <section className="modal-main">
+                <h2>Add a new task</h2>
+                <form onSubmit={handleEdit}>
+                    <label>
+                        Task Name:
+                        <input
+                            type="text"
+                            name="taskName"
+                            placeholder="Title"
+                            value={taskName}
+                            onChange={(e) => setTaskName(e.target.value)}
+                            required
+                        />
+                    </label>
+                    <label>
+                        Description:
+                        <textarea
+                            name="taskDescription"
+                            placeholder="Description"
+                            value={taskDescription}
+                            onChange={(e) => setTaskDescription(e.target.value)}
+                            required
+                        />
+                    </label>
+                    <label>
+                        Deadline:
+                        <input
+                            type="date"
+                            name="taskDeadline"
+                            value={taskDeadline}
+                            onChange={(e) => setTaskDeadline(e.target.value)}
+                        />
+                    </label>
+                    <label>
+                        Priority:
+                        <select
+                            value={taskPriority}
+                            onChange={(e) => setTaskPriority(e.target.value)}
+                            required
+                        >
+                            <option value="🔴">🔴 Low</option>
+                            <option value="🟡">🟡 Medium</option>
+                            <option value="🔵">🔵 High</option>
+                        </select>
+                    </label>
+                    <button type="submit">Add Task</button>
+                </form>
+                <button onClick={hideModal}>Close</button>
+            </section>
+        </div>
+    );
+};
+export default ModalEdit;
+
+
+--------------Parte del FilterButtons.tsx-----------------
+import React from "react";
+
+// Definición de las props esperadas por el componente FilterButton
+interface FilterButtonProps {
+  onFilterChange: (filter: string) => void; // Función para manejar el cambio de filtro
+}
+
+// Componente funcional FilterButton que recibe las props FilterButtonProps
+export function FilterButton({ onFilterChange }: FilterButtonProps) {
+  // Función para manejar el cambio de selección en el select
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedFilter = e.target.value; // Obtiene el valor seleccionado del select
+    onFilterChange(selectedFilter); // Llama a la función onFilterChange con el filtro seleccionado
+  };
+
+  // Renderiza el componente FilterButton
+  return (
+    <select name="options" id="options" onChange={handleFilterChange} defaultValue="all" className="filter">
+      {/* Opciones del select para filtrar */}
+      <option value="all">All</option>
+      <option value="doing">Doing</option>
+      <option value="done">Done</option>
+    </select>
+  );
+}
+
+
+--------------Parte del ListItem.tsx-----------------
+import { useState } from "react";
+import { Pencil, Trash } from "./Icons"; // Importa los iconos Pencil y Trash
+import ModalEdit from './ModalEdit'; // Importa el componente ModalEdit
+import { Task } from "../Task"; // Importa la interfaz Task
+
+// Define las props esperadas por el componente ListItem
+interface ItemProps {
+  task: Task; // Tarea a mostrar
+  onToggleDoing: () => void; // Función para cambiar el estado de "doing"
+  onDelete: () => void; // Función para eliminar la tarea
+  onEdit: (updatedTask: Task) => void; // Función para editar la tarea
+}
+
+// Componente funcional ListItem que recibe las props ItemProps
+export function ListItem({ task, onToggleDoing, onDelete, onEdit }: ItemProps) {
+  const styles = {
+    deleteButton: {
+      color: "#9d0208", // Estilo para el botón de eliminar (color rojo)
+    },
+    editButton: {
+      color: "#f5bd1f", // Estilo para el botón de editar (color amarillo)
+    },
+  };
+
+  const [show, setShow] = useState(false); // Estado para controlar la visibilidad del modal de edición
+
+  // Función para mostrar el modal de edición
+  const showModal = () => setShow(true);
+  
+  // Función para ocultar el modal de edición
+  const hideModal = () => setShow(false);
+
+  // Función para manejar la edición de la tarea
+  const handleEditTask = (updatedTask: Task) => {
+    // Llama a la función onEdit con la tarea actualizada y oculta el modal
+    onEdit({ ...updatedTask, id: task.id, doing: task.doing });
+    hideModal();
+  };
+
+  // Renderiza el componente ListItem
+  return (
+    <>
+      {/* Modal de edición de la tarea */}
+      <ModalEdit show={show} hideModal={hideModal} onSubmit={handleEditTask} data={task} />
+      
+      {/* Contenedor principal del ítem de la lista */}
+      <div className="list-item" onClick={showModal}>
+        <div className="check-estruct">
+          {/* Checkbox para marcar la tarea como "doing" */}
+          <input
+            className="check"
+            type="checkbox"
+            checked={task.doing}
+            onChange={onToggleDoing}
+          />
+          {/* Título de la tarea */}
+          <h1>{task.title}</h1>
+        </div>
+        
+        {/* Descripción de la tarea (se muestra si existe) */}
+        {task.description && <p className="text">{task.description}</p>}
+        
+        {/* Botones de editar y eliminar */}
+        <div>
+          {/* Botón de editar */}
+          <button style={styles.editButton} onClick={showModal}>
+            <Pencil /> {/* Icono de lápiz */}
+          </button>
+          
+          {/* Botón de eliminar */}
+          <button style={styles.deleteButton} onClick={onDelete}>
+            <Trash /> {/* Icono de basura */}
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
+
+--------------Parte del Lists.tsx-----------------
+import React, { useEffect, useState } from "react";
+import { ListItem } from "./ListItem";
+import { Task } from '../Task'
+
+// Definición de las props esperadas por el componente List
+interface ListProps {
+  filter: string; // Propiedad que representa el filtro actual
+}
+
+// Componente funcional List que recibe las props ListProps
+const List: React.FC<ListProps> = ({ filter }) => {
+  const [data, setData] = useState<Task[]>([]); // Estado para almacenar las tareas
+
+  useEffect(() => {
+    // Efecto de lado para cargar los datos desde localStorage al inicio
+    const savedData = JSON.parse(localStorage.getItem("tasks") || "[]");
+    if (savedData.length > 0) {
+      setData(savedData); // Actualiza el estado con los datos guardados
+    }
+  }, []);
+
+  // Función para manejar la eliminación de una tarea
+  const handleDelete = (id: string): void => {
+    const updatedData = data.filter((item) => item.id !== id); // Filtra la tarea a eliminar
+    setData(updatedData); // Actualiza el estado con los datos filtrados
+    localStorage.setItem("tasks", JSON.stringify(updatedData)); // Actualiza los datos en localStorage
+  };
+
+  // Función para cambiar el estado "doing" de una tarea
+  const handleToggleDoing = (id: string): void => {
+    const updatedData = data.map((item) => {
+      if (item.id === id) {
+        return { ...item, doing: !item.doing }; // Cambia el estado "doing" de la tarea seleccionada
+      }
+      return item;
+    });
+    setData(updatedData); // Actualiza el estado con los datos modificados
+    localStorage.setItem("tasks", JSON.stringify(updatedData)); // Actualiza los datos en localStorage
+  };
+
+  // Función para manejar la edición de una tarea
+  const handleEdit = (updatedTask: Task): void => {
+    const updatedData = data.map((item) => (item.id === updatedTask.id ? updatedTask : item)); // Actualiza la tarea editada
+    setData(updatedData); // Actualiza el estado con los datos modificados
+    localStorage.setItem("tasks", JSON.stringify(updatedData)); // Actualiza los datos en localStorage
+  };
+
+  // Renderiza el componente List
+  return (
+    <div className="list-wrapper scrollable-container">
+      {/* Mapea las tareas filtradas y renderiza cada ListItem */}
+      {data
+        .filter((item) => {
+          if (filter === "all") {
+            return true; // Muestra todas las tareas
+          } else if (filter === "doing") {
+            return !item.doing; // Muestra las tareas que no están "doing"
+          } else if (filter === "done") {
+            return item.doing; // Muestra las tareas que están "doing"
+          }
+          return true;
+        })
+        .map((item) => (
+          <ListItem
+            key={item.id} // Clave única para cada ListItem
+            task={item} // Tarea pasada como prop
+            onToggleDoing={() => handleToggleDoing(item.id)} // Función para cambiar el estado "doing" de la tarea
+            onDelete={() => handleDelete(item.id)} // Función para eliminar la tarea
+            onEdit={handleEdit} // Función para editar la tarea
+          />
+        ))}
+    </div>
+  );
+};
+
+export default List;
+
+
+--------------Parte del app.scss-----------------
+//css parte del ToDoWrapper
+.body-wrapper {
+  width: auto;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.to-do-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  padding: 3rem;
+  background: #dee2e6;
+  border: 1px solid black;
+
+
+  .hero-title {
+    padding: 1.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+	font-size: 20px;
+  }
+  .task-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .buttons-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .list-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .list-item {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: white;
+
+        div > button > svg {
+          padding: 8px;
+          border-radius: 20px;
+          &:hover {
+            background: #d9d9d9;
+          }
+        }
+      }
+    }
+  }
+}
+
+//css parte del AddButton
+.addbutton{
+	background-color: var(--color-white);
+	padding: 10px;
+	font-size: 20px;
+	border: 1px solid black;
+	cursor: pointer;
+}
+
+//css parte del Modal
+.modal {
+	position: fixed;
+	top: 10%;
+	left: 30%;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.modal-main {
+	background-color: var(--color-white);
+	padding: 60px;
+	border-radius: 8px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+	max-width: 30%;
+	max-height: calc(100vh - 40px);
+	overflow-y: auto;
+	h2 {
+		font-size: 1.5rem;
+		margin-bottom: 20px;
+	}
+	form {
+		display: flex;
+		flex-direction:column;
+	}
+	label {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 10px;
+	}
+	input[type="text"] {
+		width: 100%;
+		padding: 15px;
+		margin-right: 30px;
+		font-size: 1rem;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+	}
+	textarea {
+		max-width: 100%;
+		padding: 10px;
+		margin-right: 35px;
+		font-size: 1rem;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		resize: none;
+
+	}
+	button {
+		margin-top: 10px;
+		padding: 10px 20px;
+		background-color: var(--color-white);
+		color: var(--color-dark);
+		border: 1px solid;
+		border-radius: 4px;
+		margin-left: 10px;
+		cursor: pointer;
+		transition: background-color 0.3s ease;
+	}
+}
+.display-none {
+	display: none;
+}
+.display-block {
+	display: block;
+}
+
+//css parte del FilterButtons
+.filter{
+	padding: 10px;
+	font-size: 20px;
+	cursor: pointer;
+}
+
+
+//css parte del Lists
+.scrollable-container {
+  height: 400px; // Ajusta la altura según tus necesidades
+  overflow-y: auto;
+  border: 1px solid black;
+  padding: 15px;
+  background-color: var(--color-white);
+}
+
+//css parte del ListItem
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid black;
+  border-radius: 5px;
+
+  .check-estruct {
+    display: flex;
+    align-items: center;
+	gap: 10px;
+
+	.check{
+		cursor: pointer;
+	}
+  }
+  .text{
+	margin-left: auto;
+	margin-right: 20%;
+  }
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &.edit-button {
+      color: #f5bd1f;
+    }
+
+    &.delete-button {
+      color: #9d0208;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+
+
+---------------------------------------------------------------------------------------Parte del Task.ts--------------------------------------------------
+export interface Task {
+    id: string;             // Identificador único de la tarea (debe ser una cadena)
+    title: string;          // Título o nombre de la tarea (debe ser una cadena)
+    description: string;    // Descripción detallada de la tarea (debe ser una cadena)
+    dateCreated: string;    // Fecha de creación de la tarea (debe ser una cadena en formato de fecha válido)
+    deadLine: string;       // Fecha límite para completar la tarea (debe ser una cadena en formato de fecha válido)
+    priority: string;       // Prioridad de la tarea (debe ser una cadena que represente la prioridad)
+    doing: boolean;         // Estado de la tarea, si se está realizando actualmente o no (booleano)
+}
+
+------------------------------------------------------------------------------------------------------------Parte del Icons.tsx-------------------------------------
+export function Trash(){
+    return(
+        <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM3 3.5C3 3.22386 3.22386 3 3.5 3H5H10H11.5C11.7761 3 12 3.22386 12 3.5C12 3.77614 11.7761 4 11.5 4H11V12C11 12.5523 10.5523 13 10 13H5C4.44772 13 4 12.5523 4 12V4L3.5 4C3.22386 4 3 3.77614 3 3.5ZM5 4H10V12H5V4Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+    )
+}
+export function Pencil(){
+    return(
+        <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12.1464 1.14645C12.3417 0.951184 12.6583 0.951184 12.8535 1.14645L14.8535 3.14645C15.0488 3.34171 15.0488 3.65829 14.8535 3.85355L10.9109 7.79618C10.8349 7.87218 10.7471 7.93543 10.651 7.9835L6.72359 9.94721C6.53109 10.0435 6.29861 10.0057 6.14643 9.85355C5.99425 9.70137 5.95652 9.46889 6.05277 9.27639L8.01648 5.34897C8.06455 5.25283 8.1278 5.16507 8.2038 5.08907L12.1464 1.14645ZM12.5 2.20711L8.91091 5.79618L7.87266 7.87267L8.12731 8.12732L10.2038 7.08907L13.7929 3.5L12.5 2.20711ZM9.99998 2L8.99998 3H4.9C4.47171 3 4.18056 3.00039 3.95552 3.01877C3.73631 3.03668 3.62421 3.06915 3.54601 3.10899C3.35785 3.20487 3.20487 3.35785 3.10899 3.54601C3.06915 3.62421 3.03669 3.73631 3.01878 3.95552C3.00039 4.18056 3 4.47171 3 4.9V11.1C3 11.5283 3.00039 11.8194 3.01878 12.0445C3.03669 12.2637 3.06915 12.3758 3.10899 12.454C3.20487 12.6422 3.35785 12.7951 3.54601 12.891C3.62421 12.9309 3.73631 12.9633 3.95552 12.9812C4.18056 12.9996 4.47171 13 4.9 13H11.1C11.5283 13 11.8194 12.9996 12.0445 12.9812C12.2637 12.9633 12.3758 12.9309 12.454 12.891C12.6422 12.7951 12.7951 12.6422 12.891 12.454C12.9309 12.3758 12.9633 12.2637 12.9812 12.0445C12.9996 11.8194 13 11.5283 13 11.1V6.99998L14 5.99998V11.1V11.1207C14 11.5231 14 11.8553 13.9779 12.1259C13.9549 12.407 13.9057 12.6653 13.782 12.908C13.5903 13.2843 13.2843 13.5903 12.908 13.782C12.6653 13.9057 12.407 13.9549 12.1259 13.9779C11.8553 14 11.5231 14 11.1207 14H11.1H4.9H4.87934C4.47686 14 4.14468 14 3.87409 13.9779C3.59304 13.9549 3.33469 13.9057 3.09202 13.782C2.7157 13.5903 2.40973 13.2843 2.21799 12.908C2.09434 12.6653 2.04506 12.407 2.0221 12.1259C1.99999 11.8553 1.99999 11.5231 2 11.1207V11.1206V11.1V4.9V4.87935V4.87932V4.87931C1.99999 4.47685 1.99999 4.14468 2.0221 3.87409C2.04506 3.59304 2.09434 3.33469 2.21799 3.09202C2.40973 2.71569 2.7157 2.40973 3.09202 2.21799C3.33469 2.09434 3.59304 2.04506 3.87409 2.0221C4.14468 1.99999 4.47685 1.99999 4.87932 2H4.87935H4.9H9.99998Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+    )
+}

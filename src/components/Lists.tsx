@@ -16,13 +16,13 @@ const List: React.FC<ListProps> = ({ filter }) => {
     }
   }, []);
 
-  const handleDelete = (id: string): void => {
+  const handleDelete = (id?: string): void => {
     const updatedData = data.filter((item) => item.id !== id);
-    setData(updatedData);
     localStorage.setItem("tasks", JSON.stringify(updatedData));
+    setData(updatedData);
   };
 
-  const handleToggleDoing = (id: string): void => {
+  const handleToggleDoing = (id?: string): void => {
     const updatedData = data.map((item) => {
       if (item.id === id) {
         return { ...item, doing: !item.doing };

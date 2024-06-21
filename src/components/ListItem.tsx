@@ -46,10 +46,15 @@ export function ListItem({ task, onToggleDoing, onDelete, onEdit }: ItemProps) {
             onChange={handleCheckboxClick}
             onClick={(e) => e.stopPropagation()}
           />
-          <h1 onClick={showModal}>{task.title}</h1>
         </div >
-        {task.description && <p onClick={showModal} className="text">{task.description}</p>}
-        <div>
+          <div className="Titleanddescp">
+            <div>
+              <h1 onClick={showModal}>{task.title}</h1>
+            </div>
+            {task.description && <p onClick={showModal} className="text">{task.description}</p>}
+          </div>
+            <p onClick={showModal} className="priority">{task.priority}</p>
+          <div>
           <button style={styles.editButton} onClick={showModal}>
             <Pencil />
           </button>

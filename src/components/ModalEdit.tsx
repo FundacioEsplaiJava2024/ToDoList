@@ -19,7 +19,7 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
     const [taskName, setTaskName] = useState("");
     const [taskDescription, setTaskDescription] = useState("");
     const [taskDeadline, setTaskDeadline] = useState("");
-    const [taskPriority, setTaskPriority] = useState("");
+    const [taskPriority, setTaskPriority] = useState("🔴");
 
     useEffect(() => {
         if (data) {
@@ -64,7 +64,7 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
         };
     }, [show, hideModal]);
 
-    
+
     if (!show) {
         return null;
     }
@@ -111,7 +111,7 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
                             onChange={(e) => setTaskPriority(e.target.value)}
                             required
                         >
-                            <option value="🔴">🔴 Low</option>
+                            <option value="🔴" selected>🔴 Low</option>
                             <option value="🟡">🟡 Medium</option>
                             <option value="🔵">🔵 High</option>
                         </select>

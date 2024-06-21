@@ -1,9 +1,9 @@
 export interface Task {
-    id: string;
+    id?: string;
     title: string;
     description: string;
-    dateCreated: string;
+    dateCreated?: string;
     deadLine: string;
     priority: string;
-    doing: boolean;
+    doing?: boolean;
 }

@@ -102,7 +102,7 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
               onChange={(e) => setTaskPriority(e.target.value)}
               required
             >
-              <option value="🔴">🔴 Low</option>
+              <option value="🔴" selected>🔴 Low</option>
               <option value="🟡">🟡 Medium</option>
               <option value="🔵">🔵 High</option>
             </select>
