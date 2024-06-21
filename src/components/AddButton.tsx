@@ -5,7 +5,6 @@ import { Task } from '../Task';
 interface AddButtonProps {
   handleAdd: (newTask: Task) => void;
 }
-
 const AddButton = ({handleAdd} : AddButtonProps) => {
   const [show, setShow] = useState(false);
 

@@ -10,6 +10,7 @@ interface ListProps {
 
 const List = ({ filter, data, updateList }: ListProps) => {
 
+
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("tasks") || "[]");
     if (savedData.length > 0) {
@@ -39,7 +40,6 @@ const List = ({ filter, data, updateList }: ListProps) => {
     updateList(updatedData);
     localStorage.setItem("tasks", JSON.stringify(updatedData));
   };
-
   return (
     <div className="list-wrapper scrollable-container">
       {data

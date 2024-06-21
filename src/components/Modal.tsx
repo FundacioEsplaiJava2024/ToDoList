@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from "react";
 import { nanoid } from "nanoid";
 import { Task } from '../Task'
-    
+
 interface AddTaskModalProps {
     show: boolean;
     hideModal: () => void;
@@ -55,9 +55,14 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     hideModal();
   };
 
-  if (!show) {
-    return null;
-  }
+
+        onSubmit(newTask);
+        setTaskName("");
+        setTaskDescription("");
+        setTaskDeadline("");
+        setTaskPriority("");
+        hideModal();
+    };
 
   return (
     <div className="modal display-block">
@@ -115,4 +120,59 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   );
 };
 
+
+    return (
+        <div className="modal display-block">
+            <section className="modal-main">
+                <h2>Add a new task</h2>
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        Task Name:
+                        <input
+                            type="text"
+                            name="taskName"
+                            placeholder="Tittle"
+                            value={taskName}
+                            onChange={(e) => setTaskName(e.target.value)}
+                            required
+                        />
+                    </label>
+                    <label>
+                        Description:
+                        <textarea
+                            name="taskDescription"
+                            placeholder="Description"
+                            value={taskDescription}
+                            onChange={(e) => setTaskDescription(e.target.value)}
+                        />
+                    </label>
+                    <label>
+                        Deadline:
+                        <input
+                            type="date"
+                            name="taskDeadline"
+                            value={taskDeadline}
+                            onChange={(e) => setTaskDeadline(e.target.value)}
+                            pattern="\d{2}/\d{2}/\d{4}"
+                        />
+                    </label>
+                    <label>
+                        Priority:
+                        <select
+                            value={taskPriority}
+                            onChange={(e) => setTaskPriority(e.target.value)}
+                            required
+                        >
+                            <option value="🔴">🔴 Low</option>
+                            <option value="🟡">🟡 Medium</option>
+                            <option value="🔵">🔵 High</option>
+                        </select>
+                    </label>
+                    <button type="submit">Add Task</button>
+                </form>
+                <button onClick={hideModal}>Close</button>
+            </section>
+        </div>
+    );
+};
 export default Modal;

@@ -3,14 +3,6 @@ import { Pencil, Trash } from "./Icons";
 import ModalEdit from './ModalEdit';
 import { Task } from "../Task";
 
-interface ItemProps {
-  task: Task;
-  onToggleDoing: () => void;
-  onDelete: () => void;
-  onEdit: (updatedTask: Task) => void;
-}
-
-export function ListItem({ task, onToggleDoing, onDelete, onEdit }: ItemProps) {
   const styles = {
     deleteButton: {
       color: "#9d0208",
