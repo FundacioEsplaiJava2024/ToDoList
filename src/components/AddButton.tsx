@@ -13,7 +13,6 @@ const AddButton = ({handleAdd} : AddButtonProps) => {
   const submit = (task: Task) => {
     handleAdd(task);
     hideModal();
-  
   }
   
   const showModal = () => setShow(true);

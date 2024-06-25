@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { ListItem } from "./ListItem";
 import { Task } from '../Task'
+import { ToDoApiGetTasks } from '../api/ToDoIst'
 
 interface ListProps {
   filter: string; 
@@ -18,6 +19,8 @@ const List = ({ filter, data, updateList }: ListProps) => {
   }, []);
 
   const handleDelete = (id?: string): void => {
+    let tasks = ToDoApiGetTasks();
+    console.log(tasks)
     const updatedData = data.filter((item) => item.id !== id);
     localStorage.setItem("tasks", JSON.stringify(updatedData));
     updateList(updatedData);
