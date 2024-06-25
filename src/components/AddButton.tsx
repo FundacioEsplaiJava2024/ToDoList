@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { Button } from '@radix-ui/themes';
 import Modal from './Modal';
 import { Task } from '../Task';
 
@@ -20,7 +21,7 @@ const AddButton = ({handleAdd} : AddButtonProps) => {
 
   return (
     <div>
-      <button onClick={showModal} className='addbutton'>New</button>
+      <Button onClick={showModal} className='addbutton'>New</Button>
       <Modal show={show} hideModal={hideModal} onSubmit={submit} />
     </div>
   );

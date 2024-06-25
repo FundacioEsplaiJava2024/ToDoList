@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Text } from '@radix-ui/themes';
 import  List  from "./Lists";
 import { FilterButton } from "./FilterButtons";
 import AddButton from './AddButton';
@@ -35,7 +36,7 @@ export function ToDoWrapper({ title }: ToDoProps) {
   return (
     <main className="to-do-wrapper">
       <div className="hero-title">
-        <h1>{title}</h1>
+        <Text>{title}</Text>
       </div>
       <div className="task-wrapper">
         <div className="buttons-wrapper">
