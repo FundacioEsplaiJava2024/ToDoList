@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Pencil, Trash } from "./Icons";
+import { Checkbox } from "@radix-ui/themes";
+import { Trash } from "./Icons";
 import ModalEdit from './ModalEdit';
 import { Task } from "../Task";
 
@@ -11,14 +12,6 @@ interface ItemProps {
 }
 
 export function ListItem({ task, onToggleDoing, onDelete, onEdit }: ItemProps) {
-  const styles = {
-    deleteButton: {
-      color: "#9d0208",
-    },
-    editButton: {
-      color: "#f5bd1f",
-    },
-  };
 
   const [show, setShow] = useState(false);
 
@@ -55,10 +48,7 @@ export function ListItem({ task, onToggleDoing, onDelete, onEdit }: ItemProps) {
           </div>
             <p onClick={showModal} className="priority">{task.priority}</p>
           <div>
-          <button style={styles.editButton} onClick={showModal}>
-            <Pencil />
-          </button>
-          <button style={styles.deleteButton} onClick={onDelete}>
+          <button onClick={onDelete}>
             <Trash />
           </button>
         </div>

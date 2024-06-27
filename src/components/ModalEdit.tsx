@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Close } from "./Icons";
+import { Button } from "@radix-ui/themes";
 
 interface Task {
     title: string;
@@ -72,6 +74,9 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
     return (
         <div className="modal display-block">
             <section className="modal-main">
+            <button onClick={hideModal} className="close-button">
+                <Close />
+            </button>
                 <h2>Edit Task</h2>
                 <form onSubmit={handleEdit}>
                     <label>
@@ -116,9 +121,8 @@ const ModalEdit: React.FC<EditTaskModalProps> = ({ show, hideModal, onSubmit, da
                             <option value="🔵">🔵 High</option>
                         </select>
                     </label>
-                    <button type="submit">Edit Task</button>
+                    <Button type="submit">Edit Task</Button>
                 </form>
-                <button onClick={hideModal}>Close</button>
             </section>
         </div>
     );

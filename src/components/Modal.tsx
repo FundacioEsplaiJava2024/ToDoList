@@ -1,7 +1,9 @@
 import React, { useState, useEffect} from "react";
 import { nanoid } from "nanoid";
 import { Task } from '../Task'
-    
+import { Button } from "@radix-ui/themes";
+import { Close } from "./Icons"
+
 interface AddTaskModalProps {
     show: boolean;
     hideModal: () => void;
@@ -62,6 +64,9 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   return (
     <div className="modal display-block">
       <section className="modal-main">
+      <button onClick={hideModal} className="close-button">
+        <Close />
+      </button>
         <h2>Add a new task</h2>
         <form onSubmit={handleSubmit}>
           <label>
@@ -107,9 +112,8 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
               <option value="🔵">🔵 High</option>
             </select>
           </label>
-          <button type="submit">Add Task</button>
+          <Button type="submit">Add Task</Button>
         </form>
-        <button onClick={hideModal}>Close</button>
       </section>
     </div>
   );
