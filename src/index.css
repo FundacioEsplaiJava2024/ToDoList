@@ -9,7 +9,7 @@
   --margin-large: 3rem;
   --margin-low: 1.5rem;
 }
-
+   
 *{
   margin: 0;
   padding: 0;
@@ -29,4 +29,8 @@ h3,
 h4,
 h5{
   font-size: var(--secondary-font-size);
+}
+button{
+  border: none;
+  background: none;
 }
