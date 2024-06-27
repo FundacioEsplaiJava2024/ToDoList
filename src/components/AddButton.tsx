@@ -1,15 +1,6 @@
 import { useState } from 'react';
 import Modal from './Modal';
-
-interface Task {
-    id: string;
-    title: string;
-    description: string;
-    dateCreated: string;
-    deadLine: string;
-    priority: string;
-    doing: boolean;
-}
+import { Task } from '../Task';
 
 const AddButton= () => {
     const [show, setShow] = useState(false);

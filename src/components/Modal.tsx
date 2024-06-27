@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-
-interface Task {
-    id: string;
-    title: string;
-    description: string;
-    dateCreated: string;
-    deadLine: string;
-    priority: string;
-    doing: boolean;
-}
+import { Task } from '../Task';
 
 interface AddTaskModalProps {
     show: boolean;
