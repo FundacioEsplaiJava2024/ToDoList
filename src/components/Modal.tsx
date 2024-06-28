@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Task } from '../Task';
-
+import React, { useState, useEffect} from "react";
+import { nanoid } from "nanoid";
+import { Task } from '../Task'
+        
 interface AddTaskModalProps {
     show: boolean;
     hideModal: () => void;
@@ -8,91 +9,110 @@ interface AddTaskModalProps {
 }
 
 const Modal: React.FC<AddTaskModalProps> = ({ show, hideModal, onSubmit }) => {
-    const [taskName, setTaskName] = useState('');
-    const [taskDescription, setTaskDescription] = useState('');
-    const [taskDeadline, setTaskDeadline] = useState('');
-    const [taskPriority, setTaskPriority] = useState('');
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (taskName.trim() === '') {
-            alert('Please enter a task name');
-            return;
-        }
+    const [taskName, setTaskName] = useState("");
+    const [taskDescription, setTaskDescription] = useState("");
+    const [taskDeadline, setTaskDeadline] = useState("");
+    const [taskPriority, setTaskPriority] = useState("");
   
-        const newTask: Task = {
-            id: String(Date.now()),
-            title: taskName,
-            description: taskDescription,
-            dateCreated: new Date().toLocaleDateString(),
-            deadLine: taskDeadline || "",
-            priority: taskPriority,
-            doing: true
-        };
+    useEffect(() => {
+      const handleEscape = (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
+              hideModal();
+          }
+      };
 
-        onSubmit(newTask);
-        setTaskName('');
-        setTaskDescription('');
-        setTaskDeadline('');
-        setTaskPriority('');
-        hideModal();
-    };
+      if (show) {
+          document.addEventListener('keydown', handleEscape);
+      }
 
-    if (!show) {
-        return null;
+      return () => {
+          document.removeEventListener('keydown', handleEscape);
+      };
+  }, [show, hideModal]);
+
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (taskName.trim() === "") {
+      alert("Please enter a task name");
+      return;
     }
 
-    return (
-        <div className="modal display-block">
-            <section className="modal-main">
-                <h2>Add a new task</h2>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Task Name:
-                        <input
-                            type="text"
-                            name="taskName"
-                            value={taskName}
-                            onChange={(e) => setTaskName(e.target.value)}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Description:
-                        <textarea
-                            name="taskDescription"
-                            value={taskDescription}
-                            onChange={(e) => setTaskDescription(e.target.value)}
-                        />
-                    </label>
-                    <label>
-                        Deadline:
-                        <input
-                            type="date"
-                            name="taskDeadline"
-                            value={taskDeadline}
-                            onChange={(e) => setTaskDeadline(e.target.value)}
-                            pattern="\d{2}/\d{2}/\d{4}"
-                        />
-                    </label>
-                    <label>
-                        Priority:
-                        <select
-                            value={taskPriority}
-                            onChange={(e) => setTaskPriority(e.target.value)}
-                            required
-                        >
-                            <option value="🔴">🔴 Low</option>
-                            <option value="🟡">🟡 Medium</option>
-                            <option value="🔵">🔵 High</option>
-                        </select>
-                    </label>
-                    <button type="submit">Add Task</button>
-                </form>
-                <button onClick={hideModal}>Close</button>
-            </section>
-        </div>
-    );
+    const newTask: Task = {
+      id: nanoid(),
+      title: taskName,
+      description: taskDescription,
+      dateCreated: new Date().toLocaleDateString(),
+      deadLine: taskDeadline || "",
+      priority: taskPriority,
+      doing: false,
+    };
+
+    onSubmit(newTask);
+    setTaskName("");
+    setTaskDescription("");
+    setTaskDeadline("");
+    setTaskPriority("");
+    hideModal();
+  };
+
+  if (!show) {
+    return null;
+  }
+
+  return (
+    <div className="modal display-block">
+      <section className="modal-main">
+        <h2>Add a new task</h2>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Task Name:
+            <input
+              type="text"
+              name="taskName"
+              placeholder="Tittle"
+              value={taskName}
+              onChange={(e) => setTaskName(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Description:
+            <textarea
+              name="taskDescription"
+              placeholder="Description"
+              value={taskDescription}
+              onChange={(e) => setTaskDescription(e.target.value)}
+              required
+            />
+          </label>
+          <label>
+            Deadline:
+            <input
+              type="date"
+              name="taskDeadline"
+              value={taskDeadline}
+              onChange={(e) => setTaskDeadline(e.target.value)}
+              pattern="\d{2}/\d{2}/\d{4}"
+            />
+          </label>
+          <label>
+            Priority:
+            <select
+              value={taskPriority}
+              onChange={(e) => setTaskPriority(e.target.value)}
+              required
+            >
+              <option value="🔴">🔴 Low</option>
+              <option value="🟡">🟡 Medium</option>
+              <option value="🔵">🔵 High</option>
+            </select>
+          </label>
+          <button type="submit">Add Task</button>
+        </form>
+        <button onClick={hideModal}>Close</button>
+      </section>
+    </div>
+  );
 };
 
 export default Modal;
