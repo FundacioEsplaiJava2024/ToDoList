@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from "react";
 import { nanoid } from "nanoid";
 import { Task } from '../Task'
-    
+        
 interface AddTaskModalProps {
     show: boolean;
     hideModal: () => void;

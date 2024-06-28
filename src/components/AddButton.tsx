@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import Modal from './Modal';
 import { Task } from '../Task';
 
-
 const AddButton: React.FC = () => {
   const [show, setShow] = useState(false);
   const [tasks, setTasks] = useState<Task[]>([]);

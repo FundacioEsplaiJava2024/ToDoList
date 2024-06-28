@@ -11,6 +11,7 @@ interface ItemProps {
 }
 
 export function ListItem({ task, onToggleDoing, onDelete, onEdit }: ItemProps) {
+  
   const styles = {
     deleteButton: {
       color: "#9d0208",
