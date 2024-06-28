@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Checkbox } from "@radix-ui/themes";
 import { Trash } from "./Icons";
 import ModalEdit from './ModalEdit';
 import { Task } from "../Task";

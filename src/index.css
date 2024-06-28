@@ -20,6 +20,7 @@ body{
   font-family: var(--font-family);
   font-size: var(--secondary-font-size);
   background: #1a759f;
+  overflow: hidden;
 }
 
 h1{
