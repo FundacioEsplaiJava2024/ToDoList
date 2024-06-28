@@ -15,7 +15,6 @@ const AddButton= () => {
         localStorage.setItem('tasks', JSON.stringify(updatedTasks));
 
         hideModal();
-        window.location.reload();
     };
 
     return (
